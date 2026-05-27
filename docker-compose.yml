@@ -1,0 +1,12 @@
+services:
+  phonelink-server:
+    build: .
+    container_name: phonelink-server
+    ports:
+      - "8765:8765"
+    volumes:
+      - ./data:/app/data
+      - /vol3/@apphome/picoclaw/.picoclaw/workspace/phone_data:/app/picoclaw_phone_data
+    environment:
+      - PICOCRAWL_WORKSPACE=/app/picoclaw_phone_data
+    restart: unless-stopped
