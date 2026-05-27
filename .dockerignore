@@ -1,0 +1,4 @@
+.git
+data/
+*.pem
+__pycache__/
