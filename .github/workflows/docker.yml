@@ -1,13 +1,10 @@
-name: Build & Push Docker Image
+name: Build & Test Docker Image
 
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
-
-env:
-  IMAGE_NAME: phonelink-server
 
 jobs:
   build:
@@ -21,38 +18,13 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t $IMAGE_NAME:latest .
+          docker build -t phonelink-server:latest .
           echo "✅ Docker image built successfully"
 
       - name: Test server starts
         run: |
-          docker run -d --name test-server -p 8765:8765 $IMAGE_NAME:latest
+          docker run -d --name test-server -p 8765:8765 phonelink-server:latest
           sleep 3
           curl -f http://localhost:8765/ || (docker logs test-server && exit 1)
           docker stop test-server
           echo "✅ Server health check passed"
-
-  push:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Log in to GHCR
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push
-        uses: docker/build-push-action@v5
-        with:
-          push: true
-          tags: |
-            ghcr.io/${{ github.repository }}:latest
-            ghcr.io/${{ github.repository }}:${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
