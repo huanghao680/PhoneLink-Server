@@ -1,8 +1,8 @@
 FROM golang:1.23-alpine AS build
 WORKDIR /src
 COPY go.mod ./
-RUN go mod tidy
 COPY main.go .
+RUN go mod tidy
 RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /phonelink-server .
 
 FROM alpine:3.20
