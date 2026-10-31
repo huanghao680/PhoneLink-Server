@@ -11,3 +11,11 @@ services:
     environment:
       - PICOCRAWL_WORKSPACE=/app/picoclaw_phone_data
     restart: unless-stopped
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: phonelink-cloudflared
+    command: tunnel --no-autoupdate --url http://phonelink-server:8765
+    depends_on:
+      - phonelink-server
+    restart: unless-stopped

@@ -31,7 +31,20 @@ go run . --port 8765 --ws-port 8766 --forward
 ### Docker
 ```bash
 docker compose up -d
+# 查看随机 Quick Tunnel 地址
+docker compose logs -f cloudflared
 ```
+
+启动后，`cloudflared` 日志会输出类似下面的临时地址：
+
+```text
+https://random-name.trycloudflare.com
+```
+
+客户端应使用：
+`https://random-name.trycloudflare.com/api/phone-data`
+
+Quick Tunnel 每次容器重新创建时都可能生成新地址，不需要 Cloudflare 账号或域名，适合测试使用。
 
 ## ⚙️ 配置
 
