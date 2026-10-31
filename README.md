@@ -1,5 +1,7 @@
 # 🦞 PicoClaw PhoneLink Server
 
+服务端使用 Go 重制，提供低开销的 HTTP + WebSocket 双通道。
+
 手机数据接收服务器，接收来自 PhoneLink Android App 的实时数据。
 
 ## 🚀 功能
@@ -23,8 +25,7 @@
 
 ### 直接运行
 ```bash
-pip install -r requirements.txt
-python3 server.py --port 8765 --forward
+go run . --port 8765 --ws-port 8766 --forward
 ```
 
 ### Docker
@@ -40,6 +41,7 @@ docker compose up -d
 | `--ws-port` | 8766 | WebSocket 端口 |
 | `--host` | 0.0.0.0 | 监听地址 |
 | `--forward` | false | 转发到 PicoClaw |
+| `--data-dir` | data | JSON 数据目录 |
 
 ## 📄 License
 

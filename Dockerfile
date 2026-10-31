@@ -1,8 +1,13 @@
-FROM python:3.12-slim
+FROM golang:1.23-alpine AS build
+WORKDIR /src
+COPY go.mod ./
+RUN go mod download
+COPY main.go .
+RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /phonelink-server .
+
+FROM alpine:3.20
 WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-COPY server.py .
+COPY --from=build /phonelink-server /usr/local/bin/phonelink-server
 RUN mkdir -p /app/data
 EXPOSE 8765 8766
-CMD ["python3", "server.py", "--forward"]
+CMD ["phonelink-server", "--forward", "--data-dir", "/app/data"]
